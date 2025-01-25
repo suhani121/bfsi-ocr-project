@@ -1,0 +1,15 @@
+numpy
+pandas
+pytesseract
+pillow
+re
+opencv-python
+pdfplumber
+matplotlib
+requests
+beautifulsoup4
+time
+flask
+scikit-learn
+torch
+transformers
