@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainingArguments
 
 # Load and preprocess dataset
-df = pd.read_csv("transactions_dataset.csv")
+df = pd.read_csv(r"bfsi-ocr-project\bfsi-ocr-project\supervised\transaction_dataset.csv")
 
 # Encode categories
 label_encoder = LabelEncoder()
