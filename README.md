@@ -32,7 +32,7 @@ Make sure you have Python installed (preferably version 3.8) and have `pip` set 
    ```
 4. Train the BERT model for transaction classification:
    ```bash
-   python bert_classification.py transaction.py
+   python bert_classification.py 
    ```
    Once the model is trained, it will be saved in the specified directory.
 5. Analyze the classification results:
