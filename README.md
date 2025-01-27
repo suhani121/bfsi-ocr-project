@@ -51,9 +51,9 @@ The `semi-supervised` folder includes:
 - **Web Scraping**: Scrape financial data from a specified website.
 
 To use this workflow:
-1. Navigate to the `semi_supervised` folder:
+1. Navigate to the `semi-supervised` folder:
    ```bash
-   cd semi_supervised
+   cd semi-supervised
    ```
 2. Run the geocode and weather API script:
    ```bash
@@ -89,7 +89,7 @@ To use this workflow:
 │   ├── bert_classification.py
 │   ├── transaction_dataset.csv
 │   ├── classification_analysis.py
-├── semi_supervised
+├── semi-supervised
 │   ├── Geocode.py
 │   ├── Weather.py
 │   └── webscrapebs4.py
@@ -101,11 +101,8 @@ To use this workflow:
 ```
 
 ## Notes
-- Ensure all required APIs are configured before running the scripts in the `semi_supervised` folder.
+- Ensure all required APIs are configured before running the scripts in the `semi-supervised` folder.
 - Update file paths and configurations as necessary.
-
-## Contribution
-Feel free to contribute to this project by submitting a pull request. For major changes, please open an issue to discuss what you would like to change.
 
 ## License
 This project is licensed under the MIT License.
