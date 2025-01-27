@@ -65,7 +65,7 @@ def process_bank_statement(pdf_file):
     return pd.DataFrame(transactions)
 
 # Streamlit File Uploader
-st.title("Document Processing and Visualization App")
+st.title("BFSI-OCR")
 st.subheader("Upload your Bank Statements, Invoices, or Pay Slips")
 uploaded_files = st.file_uploader(
     "Upload files (PDF, PNG, JPG, JPEG)", type=["pdf", "png", "jpg", "jpeg"], accept_multiple_files=True
