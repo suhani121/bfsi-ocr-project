@@ -7,7 +7,7 @@ import cv2
 import pdfplumber
 
 # Define paths
-root_folder = r"Bank"
+root_folder = r"bfsi-ocr-project\bfsi-ocr-project\supervised\Bank"
 subfolders = ["Bank Statements", "Invoices", "Pay Slips"]
 output_csv = "extracted_data.csv"
 
