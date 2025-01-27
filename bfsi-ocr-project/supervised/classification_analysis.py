@@ -1,6 +1,6 @@
 import pandas as pd
 
-output_file = "unsupervised\classified_data.csv"
+output_file = "classified_data.csv"
 df = pd.read_csv(output_file)
 
 category_counts = df['predicted_category'].value_counts()
