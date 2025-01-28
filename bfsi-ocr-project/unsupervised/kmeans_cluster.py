@@ -4,7 +4,7 @@ import seaborn as sns
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
-# Load dataset (Ensure the correct file path)
+# Load dataset 
 df = pd.read_csv(r"bfsi-ocr-project\bfsi-ocr-project\unsupervised\synthetic_transactions.csv")
 
 # Convert "Date" to datetime format
