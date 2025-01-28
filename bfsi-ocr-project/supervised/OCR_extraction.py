@@ -71,7 +71,6 @@ def process_bank_statement(pdf_path):
                     if row and 'Txn Date' not in str(row[0]) and row[0] is not None and row[0].strip().isdigit():
                         try:
                             # Extract relevant columns
-                            # Assuming columns: Srl, Txn Date, Value Date, Description, Cheque No, CR/DR, CCY, Amount, Balance
                             txn_date = row[1]
                             description = str(row[3]) if row[3] else ''
                             cr_dr = str(row[5]) if row[5] else ''
@@ -169,14 +168,64 @@ for subfolder in subfolders:
 
         elif subfolder == "Invoices":
             text = pytesseract.image_to_string(Image.open(file_path))
-            
-            # Extract the total or subtotal
-            amount = extract_numbers_near_keywords(text, ["Total", "Subtotal"])
+            def words_to_numbers_indian(text):
+                # Dictionary for basic words to numbers
+                words = {
+                    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+                    "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16,
+                    "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+                    "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "hundred": 100, "thousand": 1000, "lakh": 100000, "crore": 10000000
+                }
+
+                # Tokenize the text
+                tokens = re.split(r"\s+", text.lower().replace("inr", "").strip())
+        
+                # Conversion logic
+                result = 0
+                current = 0
+                for token in tokens:
+                    if token in words:
+                        if token in ["hundred", "thousand", "lakh", "crore"]:
+                            current *= words[token]
+                            if token in ["thousand", "lakh", "crore"]:  # Add the multiplier to result and reset current
+                                result += current
+                                current = 0
+                        else:
+                            current += words[token]
+                    else:
+                        result += current
+                        current = 0
+                result += current  # Add any remaining value
+                return result
+
+            # Pattern to extract amount in words (INR <amount> Only)
+            word1 = "INR"
+            word2 = "Only"
+            amount_in_words_pattern = rf"{word1}\s*(.*?)\s*{word2}"
+        
+            # Find and extract the match
+            match = re.search(amount_in_words_pattern, text, re.DOTALL)
+            amount_in_words = " ".join(match.group(1).split()) if match else None
+
+            if amount_in_words:
+                # Convert words to numbers and append to data
+                amount = words_to_numbers_indian(amount_in_words)
+                data.append({
+                    "desc": "Invoice Amount",
+                    "debit": amount,
+                    "credit": 0.0
+                })
+
+            # If no words in INR format are found, fall back to numeric extraction
+            else:
+                # You can also add fallback extraction logic here if needed
+                pass
+            # Append to data
             data.append({
                 "desc": "Export",
                 "debit": amount,
                 "credit": 0.0
-            })
+               })
         
         elif subfolder == "Pay Slips":
             text = pytesseract.image_to_string(Image.open(file_path))
