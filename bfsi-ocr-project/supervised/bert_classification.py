@@ -75,7 +75,7 @@ def preprocess_description(description):
     return description.strip()
 
 # Load new dataset for classification
-data_file = r"Supervised/extracted_data.csv"
+data_file = r"extracted_data.csv"
 df = pd.read_csv(data_file)
 
 # Preprocess descriptions
@@ -91,10 +91,10 @@ categories = [
     "Entertainment and Recreation"
 ]
 
-# Load tokenizer and trained model
-model_path = "./trained_model"
+# Load tokenizer and trained model (use BERT from Hugging Face if local model isn't available)
+model_path = "bert-base-uncased"  # Update this path if you have a saved model
 tokenizer = BertTokenizer.from_pretrained(model_path)
-model = BertForSequenceClassification.from_pretrained(model_path)
+model = BertForSequenceClassification.from_pretrained(model_path, num_labels=len(categories))
 
 # Classify new descriptions
 batch_size = 32
