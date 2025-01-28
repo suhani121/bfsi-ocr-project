@@ -10,7 +10,7 @@ import pdfplumber
 import seaborn as sns
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-import plotly.express as px  # Importing Plotly for interactive plots
+import plotly.express as px 
 
 # Set up Streamlit page
 st.set_page_config(page_title="BFSI-OCR", layout="wide")
@@ -186,7 +186,7 @@ if analysis_type == "Supervised":
             # Additional Pie Chart: Distribution of Predicted Categories
             elif chart_option == "Distribution of Predicted Categories":
                 try:
-                    output_file = "unsupervised/classified_data.csv"
+                    output_file = r"Desktop\New folder\classified_data.csv"
                     classified_df = pd.read_csv(output_file)
 
                     category_counts = classified_df['predicted_category'].value_counts()
@@ -207,7 +207,7 @@ if analysis_type == "Supervised":
         else:
             st.warning("No valid data was extracted.")
 
-# Unsupervised and Semi-Supervised sections (left empty for now)
+# Unsupervised and Semi-Supervised sections
 elif analysis_type == "Unsupervised":
     st.title("Unsupervised Clustering")
     st.subheader("Upload a CSV file to apply K-Means Clustering on Transaction Data")
