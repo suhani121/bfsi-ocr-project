@@ -186,7 +186,7 @@ if analysis_type == "Supervised":
             # Additional Pie Chart: Distribution of Predicted Categories
             elif chart_option == "Distribution of Predicted Categories":
                 try:
-                    output_file = r"Desktop\New folder\classified_data.csv"
+                    output_file = r"C:\Users\suhan\OneDrive\Desktop\New folder\classified_data.csv"
                     classified_df = pd.read_csv(output_file)
 
                     category_counts = classified_df['predicted_category'].value_counts()
@@ -212,42 +212,66 @@ elif analysis_type == "Unsupervised":
     st.title("Unsupervised Clustering")
     st.subheader("Upload a CSV file to apply K-Means Clustering on Transaction Data")
 
-    # Upload the CSV file
     uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 
     if uploaded_file:
-        # Load dataset
-        df = pd.read_csv(uploaded_file)
+    # Load dataset
+      df = pd.read_csv(uploaded_file)
 
-        # Check if the required columns are present
-        if "Date" in df.columns and "Amount" in df.columns:
-            # Convert "Date" to datetime format
-            df["Date"] = pd.to_datetime(df["Date"])
+    # Check if the required columns are present
+      if "Date" in df.columns and "Amount" in df.columns:
+        # Convert "Date" to datetime format
+        df["Date"] = pd.to_datetime(df["Date"])
 
-            # Compute "Days" since the first transaction
-            df["Days"] = (df["Date"] - df["Date"].min()).dt.days
+        # Compute "Days" since the first transaction
+        df["Days"] = (df["Date"] - df["Date"].min()).dt.days
 
-            # Standardize the "Amount" column for clustering
-            scaler = StandardScaler()
-            df["Amount_Scaled"] = scaler.fit_transform(df[["Amount"]])
+        # Standardize the "Amount" column for clustering
+        scaler = StandardScaler()
+        df["Amount_Scaled"] = scaler.fit_transform(df[["Amount"]])
 
-            # Apply K-Means Clustering
-            kmeans = KMeans(n_clusters=3, n_init=10, random_state=42)
-            df["Cluster"] = kmeans.fit_predict(df[["Amount_Scaled"]])
+        # Apply K-Means Clustering
+        kmeans = KMeans(n_clusters=3, n_init=10, random_state=42)
+        df["Cluster"] = kmeans.fit_predict(df[["Amount_Scaled"]])
 
-            # Create an interactive scatter plot with hover functionality
-            fig = px.scatter(
-                df, x="Days", y="Amount", color="Cluster", hover_data=["Date", "Amount", "Cluster"],
-                title="Transaction Clustering Based on Amount & Days",
-                labels={'Days': 'Days Since First Transaction', 'Amount': 'Transaction Amount'}
-            )
-            st.plotly_chart(fig)
+        # Scatter Plot: Transaction Clustering
+        fig1 = px.scatter(
+            df, x="Days", y="Amount", color=df["Cluster"].astype(str),
+            hover_data=["Date", "Amount", "Cluster"],
+            title="Transaction Clustering Based on Amount & Days",
+            labels={'Days': 'Days Since First Transaction', 'Amount': 'Transaction Amount', 'Cluster': 'Cluster'}
+        )
+        st.plotly_chart(fig1)
 
-            # Add summary text
-            st.markdown("**Summary**: This scatter plot visualizes transactions based on the number of days since the first transaction and their amounts. Different clusters are represented by different colors, helping to identify patterns in the transaction data.")
+        # Bar Chart: Cluster Distribution
+        cluster_counts = df["Cluster"].value_counts().reset_index()
+        cluster_counts.columns = ["Cluster", "Count"]
+        fig2 = px.bar(
+            cluster_counts, x="Cluster", y="Count", color="Cluster",
+            title="Transaction Count per Cluster",
+            labels={'Cluster': 'Cluster', 'Count': 'Number of Transactions'}
+        )
+        st.plotly_chart(fig2)
 
-        else:
-            st.error("CSV file must contain 'Date' and 'Amount' columns.")
+        # Line Chart: Transactions Over Time
+        df_sorted = df.sort_values("Date")
+        fig4 = px.line(
+            df_sorted, x="Date", y="Amount", color=df_sorted["Cluster"].astype(str),
+            title="Transaction Amount Over Time",
+            labels={'Date': 'Transaction Date', 'Amount': 'Transaction Amount'}
+        )
+        st.plotly_chart(fig4)
+
+        # Summary Text
+        st.markdown("### Summary")
+        st.markdown("""
+        - The scatter plot shows how transactions are clustered based on amount and time.
+        - The bar chart highlights the number of transactions in each cluster.
+        - The line chart visualizes transaction trends over time.
+        """)
+
+    else:
+        st.error("CSV file must contain 'Date' and 'Amount' columns.")
 
 elif analysis_type == "Semi-Supervised":
     st.title("Semi-Supervised Analysis")
@@ -269,7 +293,9 @@ elif analysis_type == "Semi-Supervised":
             fig = px.bar(
                 df, x="Company", y="Price", title="Company vs Price",
                 labels={'Company': 'Company', 'Price': 'Price (USD)'},
-                hover_data=["Company", "Price"]
+                hover_data=["Company", "Price"],
+                color="Company",  
+                color_discrete_sequence=px.colors.qualitative.Set3  
             )
             st.plotly_chart(fig)
 
